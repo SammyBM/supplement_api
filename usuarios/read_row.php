@@ -16,24 +16,47 @@ $db = $database->getConnection();
 
 $usuario = new Usuario($db);
 
-$usuario->id = isset($_GET['id']) ? $_GET['id'] : die();
+if (isset($_GET['id'])) {
 
 
-$usuario->readRow();
+    $usuario->id = $_GET['id'];
 
-if ($usuario->correo != null) {
 
-    $usuario_array = array(
-        "usuarioID" => $usuario->id,
-        "tipoUsuarioID" => $usuario->tipoUsuarioID,
-        "correo" => $usuario->correo,
-        "nombre" => $usuario->nombre,
-        "apellido" => $usuario->apellido,
-        "nombreUsuario" => $usuario->nombreUsuario,
-        "fechaNacimiento" => $usuario->fechaNacimiento,
-        "contrasena" => $usuario->contrasena
-    );
+    $usuario->readRow();
 
+    if ($usuario->correo != null) {
+
+        $usuario_array = array(
+            "usuarioID" => $usuario->id,
+            "tipoUsuarioID" => $usuario->tipoUsuarioID,
+            "correo" => $usuario->correo,
+            "nombre" => $usuario->nombre,
+            "apellido" => $usuario->apellido,
+            "nombreUsuario" => $usuario->nombreUsuario,
+            "fechaNacimiento" => $usuario->fechaNacimiento,
+            "contrasena" => $usuario->contrasena
+        );
+    }
+}
+if (isset($_GET['correo'])) {
+    $usuario->correo = $_GET['correo'];
+
+
+    $usuario->readRow();
+
+    if ($usuario->correo != null) {
+
+        $usuario_array = array(
+            "usuarioID" => $usuario->id,
+            "tipoUsuarioID" => $usuario->tipoUsuarioID,
+            "correo" => $usuario->correo,
+            "nombre" => $usuario->nombre,
+            "apellido" => $usuario->apellido,
+            "nombreUsuario" => $usuario->nombreUsuario,
+            "fechaNacimiento" => $usuario->fechaNacimiento,
+            "contrasena" => $usuario->contrasena
+        );
+    }
 
     http_response_code(200);
 
