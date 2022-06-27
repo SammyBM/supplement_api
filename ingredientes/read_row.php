@@ -16,7 +16,7 @@ $db = $database->getConnection();
 
 $ingrediente = new Ingrediente($db);
 
-$ingrediente->id = isset($_GET['id']) ? $_GET['id'] : die();
+$ingrediente->ingredienteID = isset($_GET['id']) ? $_GET['id'] : die();
 
 
 $ingrediente->readRow();
@@ -24,7 +24,7 @@ $ingrediente->readRow();
 if ($ingrediente->nombre != null) {
 
     $ingrediente_item  = array(
-        "ingredienteID" => $ingrediente->id,
+        "ingredienteID" => $ingrediente->ingredienteID,
         "nombre" => $ingrediente->nombre,
         "alergeno" => $ingrediente->alergeno
     );

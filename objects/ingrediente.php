@@ -4,7 +4,7 @@ class Ingrediente
     private $connection;
     private $table_name = "ingredientes";
 
-    public $id;
+    public $ingredienteID;
     public $nombre;
     public $alergeno;
 

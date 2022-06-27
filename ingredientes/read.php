@@ -22,7 +22,7 @@ if ($num > 0) {
         extract($row);
 
         $ingrediente_item  = array(
-            "ingredienteID" => $id,
+            "ingredienteID" => $ingredienteID,
             "nombre" => $nombre,
             "alergeno" => $alergeno
         );
