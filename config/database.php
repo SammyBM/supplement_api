@@ -26,4 +26,20 @@ class Database
 
         return $this->connection;
     }
+    public function getBeautyConnection()
+    {
+        $this->connection = null;
+
+        $conn = mysqli_connect( $this->host,$this->username,$this->password,$this->db_name);
+
+        if (!$conn) {
+            echo "Error: No se pudo conectar a MySQL." . PHP_EOL;
+            echo "errno de depuración: " . mysqli_connect_errno() . PHP_EOL;
+            echo "error de depuración: " . mysqli_connect_error() . PHP_EOL;
+            return NULL;
+        }
+        
+        return $conn;
+        
+    }
 }

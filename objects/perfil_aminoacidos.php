@@ -14,7 +14,6 @@ class PerfilAminos
     public function read()
     {
         $query = "SELECT * FROM " . $this->table_nombre . " ORDER BY articuloID, aminoID";
-        echo $query;
         $stmt = $this->connection->prepare($query);
         $stmt->execute();
 

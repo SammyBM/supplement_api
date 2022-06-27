@@ -124,21 +124,17 @@ class Usuario
     {
         $query = "SELECT * FROM " . $this->table_name . " WHERE correo = ?";
         $stmt = $this->connection->prepare($query);
-
         $stmt->bindParam(1, $this->correo, PDO::PARAM_STR);
         $stmt->execute();
-
-        if ($stmt->rowCount() > 0) {
-            if ($this->contrasena === $stmt->contrasena) {
-                echo "logged in";
-                return $stmt;
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (sizeof($row)>0) {
+            if ($this->contrasena === $row["contrasena"]) {
+                return $row;
             } else {
-                echo "wrong password";
                 return false;
             }
         }
-
-        echo "no account";
+        
         return null;
     }
 }
