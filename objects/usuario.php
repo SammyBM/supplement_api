@@ -5,7 +5,7 @@ class Usuario
     private $connection;
     private $table_name = "usuarios";
 
-    public $id;
+    public $usuarioID;
     public $tipoUsuarioID;
     public $correo;
     public $nombre;
@@ -67,7 +67,7 @@ class Usuario
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $this->tipoUsuario = $row['tipoUsuarioID'];
+        $this->tipoUsuarioID = $row['tipoUsuarioID'];
         $this->nombre = $row['nombre'];
         $this->apellido = $row['apellido'];
         $this->nombreUsuario = $row['nombreUsuario'];
@@ -127,14 +127,24 @@ class Usuario
         $stmt->bindParam(1, $this->correo, PDO::PARAM_STR);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (sizeof($row)>0) {
-            if ($this->contrasena === $row["contrasena"]) {
-                return $row;
+
+
+
+        if (sizeof($row) > 0) {
+            if (password_verify($this->contrasena, $row['contrasena'])) {
+                $this->usuarioID = $row['usuarioID'];
+                $this->tipoUsuarioID = $row['tipoUsuarioID'];
+                $this->nombre = $row['nombre'];
+                $this->apellido = $row['apellido'];
+                $this->nombreUsuario = $row['nombreUsuario'];
+                $this->fechaNacimiento = $row['fechaNacimiento'];
+
+                return true;
             } else {
                 return false;
             }
         }
-        
+
         return null;
     }
 }

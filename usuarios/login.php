@@ -1,6 +1,6 @@
 <?php
 include '../config/ROUTE.php';
-header('Access-Control-Allow-Origin:'.$ROUTE.'');
+header('Access-Control-Allow-Origin:' . $ROUTE . '');
 header("Access-Control-Allow-Credentials: true");
 header("Accept: application/json, text/plain");
 //headers que permiten requests al mismo servidor, potencialmente no necesarios cuando este distribuido 
@@ -29,11 +29,11 @@ $usuario->contrasena = $data->contrasena;
 
 $usuario->login();
 
-if ($usuario != false && $usuario != null) {
+if ($usuario != false && $usuario != null && $usuario->usuarioID != null) {
 
     $usuario_array = array(
         "status"  => "true",
-        "usuarioID" => $usuario->id,
+        "usuarioID" => $usuario->usuarioID,
         "tipoUsuarioID" => $usuario->tipoUsuarioID,
         "correo" => $usuario->correo,
         "nombre" => $usuario->nombre,
@@ -49,5 +49,5 @@ if ($usuario != false && $usuario != null) {
 } else {
     http_response_code(404);
 
-    echo json_encode(array("status"=>"false","message" => "User does not exist."));
+    echo json_encode(array("status" => json_encode($usuario), "message" => "User does not exist."));
 }
