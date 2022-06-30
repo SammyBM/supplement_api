@@ -1,7 +1,7 @@
 <?php
 
 include '../config/ROUTE.php';
-header('Access-Control-Allow-Origin:'.$ROUTE.'');
+header('Access-Control-Allow-Origin:' . $ROUTE . '');
 header("Access-Control-Allow-Credentials: true");
 header("Accept: application/json, text/plain");
 //headers que permiten requests al mismo servidor, potencialmente no necesarios cuando este distribuido 
@@ -26,7 +26,7 @@ $usuario = new Usuario($db);
 $data = json_decode(file_get_contents("php://input"));
 
 if (
-    empty($data->tipoUsuario) &&
+    empty($data->tipoUsuarioID) &&
     empty($data->correo) &&
     empty($data->nombre) &&
     empty($data->apellido) &&
@@ -38,9 +38,9 @@ if (
 
     echo json_encode(array("message" => "Unable to create usuario. Data incomplete."));
 } else {
-    $contrasena_hash = password_hash($data->contrasena, PASSWORD_BCRYPT);
+    $contrasena_hash = password_hash($data->contrasena, PASSWORD_DEFAULT);
 
-    $usuario->tipoUsuario = $data->tipoUsuario;
+    $usuario->tipoUsuarioID = $data->tipoUsuarioID;
     $usuario->correo = $data->correo;
     $usuario->nombre = $data->nombre;
     $usuario->apellido = $data->apellido;
