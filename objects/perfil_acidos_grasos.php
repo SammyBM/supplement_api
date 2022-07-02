@@ -71,6 +71,35 @@ class PerfilAG
         return $stmt;
     }
 
+    function readItemByProps($acidoGrasoID, $cantidad)
+    {
+        $query = "SELECT * FROM " . $this->table_nombre . " WHERE cantidad=:cantidad AND acidoGrasoID=:acidoGrasoID";
+        $stmt = $this->connection->prepare($query);
+
+        $acidoGrasoID = htmlspecialchars(strip_tags($acidoGrasoID));
+        $cantidad = htmlspecialchars(strip_tags($cantidad));
+
+        $stmt->bindParam(':acidoGrasoID', $acidoGrasoID);
+        $stmt->bindParam(':cantidad', $cantidad);
+
+        $stmt->execute();
+
+        return $stmt;
+    }
+
+    function readByProps()
+    {
+        $resultados = array();
+        var_dump($this->acidosGrasos);
+
+        for ($x = 0; $x < count($this->acidosGrasos); $x++) {
+            $resultados[] = $this->readItemByProps($this->acidosGrasos[$x]->acidoGrasoID, $this->acidosGrasos[$x]->cantidad);
+        }
+
+        return $resultados;
+    }
+
+
     function update()
     {
         for ($x = 0; $x < count($this->acidosGrasos); $x++) {

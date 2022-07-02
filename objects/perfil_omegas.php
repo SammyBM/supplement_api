@@ -54,7 +54,6 @@ class PerfilOmegas
         return false;
     }
 
-
     function readByArticulo($articulo)
     {
         $query = "SELECT o.nombre FROM " . $this->table_nombre . " AS po
@@ -70,6 +69,29 @@ class PerfilOmegas
 
 
         return $stmt;
+    }
+
+    function readItemByProps($omegaID)
+    {
+        $query = "SELECT * FROM " . $this->table_nombre . " WHERE omegaID=:omegaID";
+        $stmt = $this->connection->prepare($query);
+
+        $omega = htmlspecialchars(strip_tags($omegaID));
+        $stmt->bindParam(':omegaID', $omega);
+
+        $stmt->execute();
+
+        return $stmt;
+    }
+
+    function readByProps()
+    {
+
+        for ($x = 0; $x < count($this->omegas); $x++) {
+            $resultados[] = $this->readItemByProps($this->omegas[$x]->omegaID);
+        }
+
+        return $resultados;
     }
 
     function deleteRow($omegaID)

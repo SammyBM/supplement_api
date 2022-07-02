@@ -70,6 +70,22 @@ class PerfilAminos
         return $stmt;
     }
 
+    function readByProps($aminoID, $cantidad)
+    {
+        $query = "SELECT * FROM " . $this->table_nombre . " WHERE cantidad=:cantidad AND aminoID=:aminoID";
+        $stmt = $this->connection->prepare($query);
+
+        $aminoID = htmlspecialchars(strip_tags($aminoID));
+        $cantidad = htmlspecialchars(strip_tags($cantidad));
+
+        $stmt->bindParam(':aminoID', $aminoID);
+        $stmt->bindParam(':cantidad', $cantidad);
+
+        $stmt->execute();
+
+        return $stmt;
+    }
+
     function update()
     {
         for ($x = 0; $x < count($this->aminos); $x++) {
@@ -85,7 +101,7 @@ class PerfilAminos
 
     function updateRow($aminoID, $articuloID, $cantidad)
     {
-        $query = "UPDATE" . $this->table_nombre . "SET cantidad=:cantidad WHERE articuloID=:articuloID AND aminoID=:aminoID";
+        $query = "UPDATE " . $this->table_nombre . " SET cantidad=:cantidad WHERE articuloID=:articuloID AND aminoID=:aminoID";
 
         $stmt = $this->connection->prepare($query);
 
