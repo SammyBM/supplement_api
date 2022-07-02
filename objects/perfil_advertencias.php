@@ -69,6 +69,30 @@ class PerfilAdvertencias
         return $stmt;
     }
 
+    function readItemByProps($advertenciaID)
+    {
+        $query = "SELECT * FROM " . $this->table_nombre . " WHERE advertenciaID=:advertenciaID";
+        $stmt = $this->connection->prepare($query);
+
+        $advertenciaID = htmlspecialchars(strip_tags($advertenciaID));
+        $stmt->bindParam(':advertenciaID', $advertenciaID);
+
+        $stmt->execute();
+
+        return $stmt;
+    }
+
+    function readByProps()
+    {
+        $resultados = array();
+
+        for ($x = 0; $x < count($this->advertencias); $x++) {
+            $resultados[] = $this->readItemByProps($this->advertencias[$x]->advertenciaID);
+        }
+
+        return $resultados;
+    }
+
     function update()
     {
         for ($x = 0; $x < count($this->advertencias); $x++) {

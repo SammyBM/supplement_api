@@ -22,26 +22,27 @@ $db = $database->getConnection();
 
 $perf = new PerfilAminos($db);
 
-$amino = isset($_GET['amino']) ? $_GET['amino'] : die();
-$cantidad = isset($_GET['cantidad']) ? $_GET['cantidad'] : die();
+$perf = isset($_GET['perfil_busqueda']) ? $_GET['perfil_busqueda'] : die();
 
 $stmt = $perf->readByProps($amino, $cantidad);
-$num = $stmt->rowCount();
+$num = sizeof($stmt);
 
 if ($num > 0) {
     $perfs_array = array();
     $perfs_array["records"] = array();
 
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        extract($row);
+    for ($i = 0; $i < $num; $i++) {
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            extract($row);
 
-        $perf_item  = array(
-            "articuloID" => $articuloID,
-            "aminoID" => $aminoID,
-            "cantidad" => $cantidad
-        );
+            $perf_item  = array(
+                "articuloID" => $articuloID,
+                "aminoID" => $aminoID,
+                "cantidad" => $cantidad
+            );
 
-        array_push($perfs_array["records"], $perf_item);
+            array_push($perfs_array["records"], $perf_item);
+        }
     }
 
     http_response_code(200);

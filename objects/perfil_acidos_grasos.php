@@ -90,7 +90,6 @@ class PerfilAG
     function readByProps()
     {
         $resultados = array();
-        var_dump($this->acidosGrasos);
 
         for ($x = 0; $x < count($this->acidosGrasos); $x++) {
             $resultados[] = $this->readItemByProps($this->acidosGrasos[$x]->acidoGrasoID, $this->acidosGrasos[$x]->cantidad);
@@ -98,7 +97,6 @@ class PerfilAG
 
         return $resultados;
     }
-
 
     function update()
     {

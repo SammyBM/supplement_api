@@ -23,7 +23,6 @@ $db = $database->getConnection();
 $perf = new PerfilAG($db);
 
 $perf->acidosGrasos = isset($_GET['perfil_busqueda']) ? json_decode($_GET['perfil_busqueda']) : die();
-echo (json_encode("coso"));
 
 $stmt = $perf->readByProps();
 $num = sizeof($stmt);

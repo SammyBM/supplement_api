@@ -22,7 +22,7 @@ $db = $database->getConnection();
 
 $perf = new PerfilOmegas($db);
 
-$perf = isset($_GET['perfil_busqueda']) ? json_decode($_GET['perfil_busqueda']) : die();
+$perf->omegas = isset($_GET['perfil_busqueda']) ? json_decode($_GET['perfil_busqueda']) : die();
 
 $stmt = $perf->readByProps();
 $num = sizeof($stmt);
@@ -32,12 +32,12 @@ if ($num > 0) {
     $perfs_array["records"] = array();
 
     for ($i = 0; $i < $num; $i++) {
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        while ($row = $stmt[$i]->fetch(PDO::FETCH_ASSOC)) {
             extract($row);
 
             $perf_item  = array(
                 "articuloID" => $articuloID,
-                "omegaID" => $omegaID,
+                "omegaID" => $omegaID
             );
 
             array_push($perfs_array["records"], $perf_item);
@@ -51,6 +51,6 @@ if ($num > 0) {
     http_response_code(404);
 
     echo json_encode(
-        array("message" => "Perfil omegas Not Found")
+        array("message" => "Perfil acidos grasos Not Found")
     );
 }

@@ -71,6 +71,33 @@ class PerfilVitaminas
         return $stmt;
     }
 
+    function readItemByProps($vitaminaID, $cantidad)
+    {
+        $query = "SELECT * FROM " . $this->table_nombre . " WHERE cantidad=:cantidad AND vitaminaID=:vitaminaID";
+        $stmt = $this->connection->prepare($query);
+
+        $vitaminaID = htmlspecialchars(strip_tags($vitaminaID));
+        $cantidad = htmlspecialchars(strip_tags($cantidad));
+
+        $stmt->bindParam(':vitaminaID', $vitaminaID);
+        $stmt->bindParam(':cantidad', $cantidad);
+
+        $stmt->execute();
+
+        return $stmt;
+    }
+
+    function readByProps()
+    {
+        $resultados = array();
+
+        for ($x = 0; $x < count($this->vitaminas); $x++) {
+            $resultados[] = $this->readItemByProps($this->vitaminas[$x]->vitaminaID, $this->vitaminas[$x]->cantidad);
+        }
+
+        return $resultados;
+    }
+
     function update()
     {
         for ($x = 0; $x < count($this->vitaminas); $x++) {

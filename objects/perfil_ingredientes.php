@@ -59,7 +59,7 @@ class PerfilIngredientes
     {
         $query = "SELECT a.nombre, a.alergeno, ip.ingActivo FROM " . $this->table_nombre . " AS ip
         INNER JOIN ingredientes as a ON ip.ingredienteID = a.ingredienteID
-        WHERE ip.articuloID = :articuloID ORDER BY ip.ingredienteID"; 
+        WHERE ip.articuloID = :articuloID ORDER BY ip.ingredienteID";
 
         $stmt = $this->connection->prepare($query);
 
@@ -69,6 +69,54 @@ class PerfilIngredientes
 
 
         return $stmt;
+    }
+
+    function readItemByProps($ingredienteID)
+    {
+        $query = "SELECT * FROM " . $this->table_nombre . " WHERE ingredienteID=:ingredienteID";
+        $stmt = $this->connection->prepare($query);
+
+        $ingredienteID = htmlspecialchars(strip_tags($ingredienteID));
+        $stmt->bindParam(':ingredienteID', $ingredienteID);
+
+        $stmt->execute();
+
+        return $stmt;
+    }
+
+    function readByProps()
+    {
+        $resultados = array();
+
+        for ($x = 0; $x < count($this->ingredientes); $x++) {
+            $resultados[] = $this->readItemByProps($this->ingredientes[$x]->ingredienteID);
+        }
+
+        return $resultados;
+    }
+
+    function avoidAlergen($ingredienteID)
+    {
+        $query = "SELECT * FROM " . $this->table_nombre . " WHERE ingredienteID!=:ingredienteID";
+        $stmt = $this->connection->prepare($query);
+
+        $ingredienteID = htmlspecialchars(strip_tags($ingredienteID));
+        $stmt->bindParam(':ingredienteID', $ingredienteID);
+
+        $stmt->execute();
+
+        return $stmt;
+    }
+
+    function avoidAlergens()
+    {
+        $resultados = array();
+
+        for ($x = 0; $x < count($this->ingredientes); $x++) {
+            $resultados[] = $this->avoidAlergen($this->ingredientes[$x]->ingredienteID);
+        }
+
+        return $resultados;
     }
 
     function update()

@@ -70,7 +70,7 @@ class PerfilAminos
         return $stmt;
     }
 
-    function readByProps($aminoID, $cantidad)
+    function readItemByProps($aminoID, $cantidad)
     {
         $query = "SELECT * FROM " . $this->table_nombre . " WHERE cantidad=:cantidad AND aminoID=:aminoID";
         $stmt = $this->connection->prepare($query);
@@ -84,6 +84,17 @@ class PerfilAminos
         $stmt->execute();
 
         return $stmt;
+    }
+
+    function readByProps()
+    {
+        $resultados = array();
+
+        for ($x = 0; $x < count($this->aminos); $x++) {
+            $resultados[] = $this->readItemByProps($this->aminos[$x]->aminoID, $this->aminos[$x]->cantidad);
+        }
+
+        return $resultados;
     }
 
     function update()
