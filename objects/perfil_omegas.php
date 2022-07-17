@@ -23,7 +23,7 @@ class PerfilOmegas
     public function create()
     {
         for ($x = 0; $x < count($this->omegas); $x++) {
-            if ($this->createRow($this->omegas[$x]->articuloID, $this->omegas[$x]->omegaID, $this->omegas[$x]->cantidad))
+            if ($this->createRow($this->omegas[$x]->articuloID, $this->omegas[$x]->omegaID))
                 continue;
             else {
                 return false;
@@ -33,7 +33,7 @@ class PerfilOmegas
         return true;
     }
 
-    public function createRow($articuloID, $omegaID, $cantidad)
+    public function createRow($articuloID, $omegaID)
     {
         $query = "INSERT INTO " . $this->table_nombre . " SET articuloID=:articuloID, omegaID=:omegaID";
 
@@ -41,11 +41,9 @@ class PerfilOmegas
 
         $articuloID = htmlspecialchars(strip_tags($articuloID));
         $omegaID = htmlspecialchars(strip_tags($omegaID));
-        $cantidad = htmlspecialchars(strip_tags($cantidad));
 
         $stmt->bindParam('articuloID', $articuloID);
         $stmt->bindParam('omegaID', $omegaID);
-        $stmt->bindParam('cantidad', $cantidad);
 
         if ($stmt->execute()) {
             return true;
@@ -53,7 +51,6 @@ class PerfilOmegas
 
         return false;
     }
-
 
     function readByArticulo($articulo)
     {
@@ -70,6 +67,30 @@ class PerfilOmegas
 
 
         return $stmt;
+    }
+
+    function readItemByProps($omegaID)
+    {
+        $query = "SELECT * FROM " . $this->table_nombre . " WHERE omegaID=:omegaID";
+        $stmt = $this->connection->prepare($query);
+
+        $omegaID = htmlspecialchars(strip_tags($omegaID));
+        $stmt->bindParam(':omegaID', $omegaID);
+
+        $stmt->execute();
+
+        return $stmt;
+    }
+
+    function readByProps()
+    {
+        $resultados = array();
+
+        for ($x = 0; $x < count($this->omegas); $x++) {
+            $resultados[] = $this->readItemByProps($this->omegas[$x]->omegaID);
+        }
+
+        return $resultados;
     }
 
     function deleteRow($omegaID)

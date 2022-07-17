@@ -26,19 +26,19 @@ class Articulo
         $query = "SELECT * FROM " . $this->table_nombre;
         $stmt = $this->connection->prepare($query);
         $stmt->execute();
-        
+
         return $stmt;
     }
 
     public function create()
     {
-        $etiquetas="";
-        $temp=json_decode($this->etiquetas,true);
-        for($i=0;$i<sizeof($temp);$i++){
-            if($etiquetas==""){
-                $etiquetas="#".$temp[$i]["etiqueta"];
-            }else{
-                $etiquetas=$etiquetas.",#".$temp[$i]["etiqueta"];
+        $etiquetas = "";
+        $temp = json_decode($this->etiquetas, true);
+        for ($i = 0; $i < sizeof($temp); $i++) {
+            if ($etiquetas == "") {
+                $etiquetas = "#" . $temp[$i]["etiqueta"];
+            } else {
+                $etiquetas = $etiquetas . ",#" . $temp[$i]["etiqueta"];
             }
         }
         $this->titulo = htmlspecialchars(strip_tags($this->titulo));
@@ -68,7 +68,7 @@ class Articulo
             }else{
                 return json_encode("{status:false}");
             }
-        }else{
+        } else {
             return json_encode("{status:false}");
         }
     }
@@ -97,9 +97,37 @@ class Articulo
         $this->carbohidratos = $row['carbohidratos'];
     }
 
+    function readByProps()
+    {
+        $query = "SELECT * FROM " . $this->table_nombre . " WHERE categoriaID=:categoriaID,tamanoPorcion=:tamanoPorcion,calorias=:calorias, proteina=:proteina, lipidos=:lipidos, carbohidratos=:carbohidratos WHERE usuarioID = :id";
+
+        $stmt = $this->connection->prepare($query);
+
+        $this->categoriaID = htmlspecialchars(strip_tags($this->categoriaID));
+        $this->tamanoPorcion = htmlspecialchars(strip_tags($this->tamanoPorcion));
+        $this->calorias = htmlspecialchars(strip_tags($this->calorias));
+        $this->proteina = htmlspecialchars(strip_tags($this->proteina));
+        $this->lipidos = htmlspecialchars(strip_tags($this->lipidos));
+        $this->carbohidratos = htmlspecialchars(strip_tags($this->carbohidratos));
+
+        $stmt->bindParam(':titulo', $this->titulo);
+        $stmt->bindParam(':etiquetas', $this->etiquetas);
+        $stmt->bindParam(':imagen', $this->imagen);
+        $stmt->bindParam(':categoriaID', $this->categoriaID);
+        $stmt->bindParam('tamanoPorcion', $this->tamanoPorcion);
+        $stmt->bindParam('calorias', $this->calorias);
+        $stmt->bindParam('proteina', $this->proteina);
+        $stmt->bindParam('lipidos', $this->lipidos);
+        $stmt->bindParam('carbohidratos', $this->carbohidratos);
+
+        $stmt->execute();
+
+        return $stmt;
+    }
+
     function update()
     {
-        $query = "UPDATE" . $this->table_nombre . "SET titulo=:titulo, etiquetas=:etiquetas, imagen=:imagen,categoriaID=:categoriaID,tamanoPorcion=:tamanoPorcion,calorias=:calorias, proteina=:proteina, lipidos=:lipidos, carbohidratos=:carbohidratos WHERE usuarioID = :id";
+        $query = "UPDATE" . $this->table_nombre . "SET titulo=:titulo, etiquetas=:etiquetas, imagen=:imagen,categoriaID=:categoriaID,tamanoPorcion=:tamanoPorcion,calorias=:calorias, proteina=:proteina, lipidos=:lipidos, carbohidratos=:carbohidratos WHERE articuloID = :id";
 
         $stmt = $this->connection->prepare($query);
 
@@ -122,7 +150,7 @@ class Articulo
         $stmt->bindParam('proteina', $this->proteina);
         $stmt->bindParam('lipidos', $this->lipidos);
         $stmt->bindParam('carbohidratos', $this->carbohidratos);
-        $stmt->bindParam(':id', $this->id);
+        $stmt->bindParam(':id', $this->articuloID);
 
         if ($stmt->execute()) {
             return true;
