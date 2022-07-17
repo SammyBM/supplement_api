@@ -1,5 +1,5 @@
 <?php
-include '../upload.php';
+include '../imagenes/imageController.php';
 class Articulo
 {
     private $connection;
@@ -61,9 +61,10 @@ class Articulo
             '".$this->lipidos."',
             '".$this->carbohidratos."')";
         $result=mysqli_query($this->connection,$query);
-        if(uploadimage($this->imagen->imageName,$this->imagen->imageSrc)){
+        $id=mysqli_insert_id($this->connection);
+        if(uploadProductImage($this->imagen->imageName,$this->imagen->imageSrc, $id)){
             if($result){
-                return json_encode("{status:true,data:".mysqli_insert_id($this->connection)."}");
+                return json_encode("{status:true,data:".$id."}");
             }else{
                 return json_encode("{status:false}");
             }
