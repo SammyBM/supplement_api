@@ -23,7 +23,7 @@ $db = $database->getBeautyConnection();
 $articulo = new Articulo($db);
 
 $data = json_decode(file_get_contents("php://input"));
-
+var_dump($data);
 if (
     empty($data->titulo) &&
     empty($data->etiquetas) &&
@@ -49,7 +49,7 @@ if (
     $articulo->proteina = $data->proteina;
     $articulo->lipidos = $data->lipidos;
     $articulo->carbohidratos = $data->carbohidratos;
-    $verify=json_decode($articulo->create(),true);
+    $verify=json_decode($articulo->create());
     if ($verify->status) {
 
         http_response_code(201);

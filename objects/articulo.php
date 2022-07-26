@@ -1,5 +1,5 @@
 <?php
-include '../upload.php';
+include '../imagenes/imageController.php';
 class Articulo
 {
     private $connection;
@@ -50,21 +50,22 @@ class Articulo
         $this->lipidos = htmlspecialchars(strip_tags($this->lipidos));
         $this->carbohidratos = htmlspecialchars(strip_tags($this->carbohidratos));
         $query = "INSERT INTO " .
-            $this->table_nombre .
-            " VALUES(NULL,'" . $this->titulo . "',
-            '" . $etiquetas . "',
-            '" . $this->imagen->imageName . "',
-            '" . $this->categoriaID . "',
-            '" . $this->tamanoPorcion . "',
-            '" . $this->calorias . "',
-            '" . $this->proteina . "',
-            '" . $this->lipidos . "',
-            '" . $this->carbohidratos . "')";
-        $result = mysqli_query($this->connection, $query);
-        if (uploadimage($this->imagen->imageName, $this->imagen->imageSrc)) {
-            if ($result) {
-                return json_encode("{status:true,data:" . mysqli_insert_id($this->connection) . "}");
-            } else {
+         $this->table_nombre .
+          " VALUES(NULL,'".$this->titulo."',
+            '".$etiquetas."',
+            '".$this->imagen->imageName."',
+            '".$this->categoriaID."',
+            '".$this->tamanoPorcion."',
+            '".$this->calorias."',
+            '".$this->proteina."',
+            '".$this->lipidos."',
+            '".$this->carbohidratos."')";
+        $result=mysqli_query($this->connection,$query);
+        $id=mysqli_insert_id($this->connection);
+        if(uploadProductImage($this->imagen->imageName,$this->imagen->imageSrc, $id)){
+            if($result){
+                return json_encode("{status:true,data:".$id."}");
+            }else{
                 return json_encode("{status:false}");
             }
         } else {
