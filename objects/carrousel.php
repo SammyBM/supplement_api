@@ -1,14 +1,10 @@
 <?php
 
-include_once "../utils/file.php";
-
 class Carrousel
 {
 
     private $connection;
     private $table_nombre = "fotos_carrusel";
-    private $fileController = new FileController("uploads/carrusel", false);
-
     public  $id;
     public  $nombre_foto;
 
@@ -20,7 +16,6 @@ class Carrousel
 
     public function create()
     {
-        $isFileUpload = $this->fileController->postFile();
 
         if ($isFileUpload !== false) {
 
@@ -28,16 +23,12 @@ class Carrousel
 
             $stmt = $this->connection->prepare($query);
 
-            $this->titulo = htmlspecialchars(strip_tags($this->nombre_foto));
-            $stmt->bindParam(-1, json_decode($isFileUpload)["Success:"]);
-
             if ($stmt->execute()) {
                 return true;
             }
 
             return false;
         } else {
-            echo $isFileUpload;
         }
     }
 
@@ -67,22 +58,6 @@ class Carrousel
 
     public function delete()
     {
-        $this->read_row();
 
-        if ($this->fileController->deleteFile($this->nombre_foto)) {
-
-            $query = "DELETE FROM " . $this->table_nombre . " WHERE fotoID = ?";
-            $stmt = $this->connection->prepare($query);
-
-            $this->id = htmlspecialchars(strip_tags($this->id));
-
-
-            $stmt->bindParam(1, $this->id, PDO::PARAM_INT);
-
-            if ($stmt->execute()) {
-                return true;
-            }
-            return false;
-        }
     }
 }
