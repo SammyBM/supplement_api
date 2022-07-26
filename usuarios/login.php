@@ -46,7 +46,7 @@ if ($usuario == false) {
         http_response_code(200);
         echo json_encode($usuario_array);
     } else {
-        http_response_code(404);
+        http_response_code(204);
         echo json_encode(array("status" => json_encode($usuario), "message" => "User does not exist."));
     }
 }
