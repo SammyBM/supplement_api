@@ -77,25 +77,31 @@ class Usuario
 
     function update()
     {
-        $query = "UPDATE" . $this->table_name . "SET tipoUsuarioID=:tipoUsuarioID, nombre = :nombre, apellido = :apellido, nombreUsuario = :nombreUsuario, fechaNacimiento = :fechaNacimiento WHERE usuarioID = :id";
+        $query = "UPDATE " . $this->table_name . " 
+        SET tipoUsuarioID = :tipoUsuarioID, correo = :correo,
+         nombre = :nombre, apellido = :apellido, nombreUsuario = :nombreUsuario,
+         fechaNacimiento = :fechaNacimiento, contrasena = :contrasena 
+         WHERE usuarioID = :usuarioID";
 
         $stmt = $this->connection->prepare($query);
 
         $this->tipoUsuarioID = htmlspecialchars(strip_tags($this->tipoUsuarioID));
+        $this->contrasena = htmlspecialchars(strip_tags($this->contrasena));
         $this->correo = htmlspecialchars(strip_tags($this->correo));
         $this->nombre = htmlspecialchars(strip_tags($this->nombre));
         $this->apellido = htmlspecialchars(strip_tags($this->apellido));
         $this->nombreUsuario = htmlspecialchars(strip_tags($this->nombreUsuario));
         $this->fechaNacimiento = htmlspecialchars(strip_tags($this->fechaNacimiento));
-        $this->id = htmlspecialchars(strip_tags($this->id));
+        $this->usuarioID = htmlspecialchars(strip_tags($this->usuarioID));
 
         $stmt->bindParam(':tipoUsuarioID', $this->tipoUsuarioID);
+        $stmt->bindParam(':contrasena', $this->contrasena);
         $stmt->bindParam(':correo', $this->correo);
         $stmt->bindParam(':nombre', $this->nombre);
         $stmt->bindParam(':apellido', $this->apellido);
         $stmt->bindParam(':nombreUsuario', $this->nombreUsuario);
         $stmt->bindParam(':fechaNacimiento', $this->fechaNacimiento);
-        $stmt->bindParam(':id', $this->id);
+        $stmt->bindParam(':usuarioID', $this->usuarioID);
 
         if ($stmt->execute()) {
             return true;
@@ -106,12 +112,12 @@ class Usuario
 
     function delete()
     {
-        $query = "DELETE FROM " . $this->table_name . " WHERE id = ?";
+        $query = "DELETE FROM " . $this->table_name . " WHERE usuarioID = ?";
         $stmt = $this->connection->prepare($query);
 
-        $this->id = htmlspecialchars(strip_tags($this->id));
+        $this->usuarioID = htmlspecialchars(strip_tags($this->usuarioID));
 
-        $stmt->bindParam(1, $this->id, PDO::PARAM_INT);
+        $stmt->bindParam(1, $this->usuarioID, PDO::PARAM_INT);
 
         if ($stmt->execute()) {
             return true;

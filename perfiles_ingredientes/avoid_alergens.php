@@ -22,7 +22,7 @@ $db = $database->getConnection();
 
 $perf = new PerfilIngredientes($db);
 
-$perf->acidosGrasos = isset($_GET['perfil_busqueda']) ? json_decode($_GET['perfil_busqueda']) : die();
+$perf->alergenos = isset($_GET['perfil_busqueda']) ? json_decode($_GET['perfil_busqueda']) : die();
 
 $stmt = $perf->avoidAlergens();
 $num = sizeof($stmt);

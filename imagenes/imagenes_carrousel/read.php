@@ -1,6 +1,6 @@
 <?php
 include '../../config/ROUTE.php';
-header('Access-Control-Allow-Origin:'.$ROUTE.'');
+header('Access-Control-Allow-Origin:' . $ROUTE . '');
 header("Access-Control-Allow-Credentials: true");
 header("Accept: application/json, text/plain");
 //headers que permiten requests al mismo servidor, potencialmente no necesarios cuando este distribuido 
@@ -33,17 +33,18 @@ if ($num > 0) {
         $foto_item  = array(
             "fotoID" => $fotoID,
             "nombre_foto" => $nombre_foto,
-            "bitmap"=> ""
+            "bitmap" => ""
         );
         array_push($fotos_array["records"], $foto_item);
     }
     // Read image path, convert to base64 encoding
-    $length=sizeof($fotos_array["records"]);
-    for ($i=0;$i<$length;$i++){
-        $imageData = base64_encode(file_get_contents($LOCAL."/imagenes/imagenes_carrousel/".
-        $fotos_array["records"][$i]["nombre_foto"].".png"));
-        $fotos_array["records"][$i]["bitmap"]=$imageData;
+    $length = sizeof($fotos_array["records"]);
+    for ($i = 0; $i < $length; $i++) {
+        $imageData = base64_encode(file_get_contents($LOCAL . "/imagenes/imagenes_carrousel/" .
+            $fotos_array["records"][$i]["nombre_foto"] . ".png"));
+        $fotos_array["records"][$i]["bitmap"] = $imageData;
     }
+
     http_response_code(200);
 
     echo json_encode($fotos_array);

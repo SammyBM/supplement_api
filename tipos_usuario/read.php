@@ -1,4 +1,5 @@
 <?php
+
 include '../config/ROUTE.php';
 header('Access-Control-Allow-Origin:' . $ROUTE . '');
 header("Access-Control-Allow-Credentials: true");
@@ -14,44 +15,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     header("HTTP/1.1 200 OK");
     return;
 }
+
 include_once '../config/database.php';
-include_once '../objects/perfil_ingredientes.php';
+include_once '../objects/tipo_usuario.php';
 
 $database = new Database();
 $db = $database->getConnection();
 
-$perf = new PerfilIngredientes($db);
+$tipoUsuario = new TipoUsuario($db);
 
-$perf->ingredientes = isset($_GET['perfil_busqueda']) ? json_decode($_GET['perfil_busqueda']) : die();
-
-$stmt = $perf->readByProps();
-$num = sizeof($stmt);
+$stmt = $tipoUsuario->read();
+$num = $stmt->rowCount();
 
 if ($num > 0) {
-    $perfs_array = array();
-    $perfs_array["records"] = array();
+    $tipoUsuarios_array = array();
+    $tipoUsuarios_array["records"] = array();
 
-    for ($i = 0; $i < $num; $i++) {
-        while ($row = $stmt[$i]->fetch(PDO::FETCH_ASSOC)) {
-            extract($row);
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        extract($row);
+        $tipoUsuario_item  = array(
+            "tipoUsuarioID" => $tipoUsuarioID,
+            "tipo" => $tipo,
+        );
 
-            $perf_item  = array(
-                "articuloID" => $articuloID,
-                "ingredienteID" => $ingredienteID,
-                "alergeno" => $alergeno
-            );
-
-            array_push($perfs_array["records"], $perf_item);
-        }
+        array_push($tipoUsuarios_array["records"], $tipoUsuario_item);
     }
 
     http_response_code(200);
 
-    echo json_encode($perfs_array);
+    echo json_encode($tipoUsuarios_array);
 } else {
     http_response_code(404);
 
     echo json_encode(
-        array("message" => "Perfil ingredientes Not Found")
+        array("message" => "Not Found")
     );
 }

@@ -30,7 +30,7 @@ class Database
     {
         $this->connection = null;
 
-        $conn = mysqli_connect( $this->host,$this->username,$this->password,$this->db_name);
+        $conn = mysqli_connect($this->host, $this->username, $this->password, $this->db_name);
 
         if (!$conn) {
             echo "Error: No se pudo conectar a MySQL." . PHP_EOL;
@@ -38,8 +38,7 @@ class Database
             echo "error de depuración: " . mysqli_connect_error() . PHP_EOL;
             return NULL;
         }
-        
+
         return $conn;
-        
     }
 }
