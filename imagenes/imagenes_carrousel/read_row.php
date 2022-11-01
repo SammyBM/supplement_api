@@ -1,5 +1,4 @@
 <?php
-
 include '../../config/ROUTE.php';
 header('Access-Control-Allow-Origin:' . $ROUTE . '');
 header("Access-Control-Allow-Credentials: true");
@@ -18,25 +17,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 include_once '../../config/database.php';
 include_once '../../objects/carrousel.php';
 
+
 $database = new Database();
 $db = $database->getConnection();
 
-$carrouselImg = new Carrousel($db);
+$foto = new Carrousel($db);
 
-$id = isset($_GET['id']) ? $_GET['id'] : die();
+$foto->id = isset($_GET['id']) ? $_GET['id'] : die();
 
-$carrouselImg->id = $id;
 
-if ($carrouselImg->delete()) {
-    http_response_code(200);
+$foto->read_row();
 
-    echo json_encode(array("message" => "CarrouselImg deleted successfully"));
+if ($foto->nombre_foto == false) {
+    http_response_code(404);
+    echo json_encode(array("message" => "foto does not exist."));
 } else {
-    if (http_response_code() == 404) {
-        echo json_encode(array("message" => "That images does not exist"));
-    } else {
-        http_response_code(503);
+    if ($foto->nombre_foto != null) {
 
-        echo json_encode(array("message" => "Unable to delete carrouselImg."));
+        $foto_array = array(
+            "nombre_foto" => $foto->nombre_foto,
+        );
+
+
+        http_response_code(200);
+
+        echo json_encode($foto_array);
+    } else {
+
+        http_response_code(500);
+
+        echo json_encode(array("message" => "There has been an error processing your request"));
     }
 }

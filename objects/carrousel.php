@@ -1,5 +1,8 @@
 <?php
 
+const IMG_DCTY = "C:/xampp/htdocs/supplement_api/imagenes/imagenes_carrousel/";
+const EXTN = ".png";
+
 class Carrousel
 {
 
@@ -14,22 +17,19 @@ class Carrousel
         $this->connection = $db;
     }
 
+    // Se debe validar la carga de la imagen por fuera de esta función.
     public function create()
     {
+        $query = "INSERT INTO " . $this->table_nombre . " nombre_foto = ?";
+        $stmt = $this->connection->prepare($query);
 
-        if ($isFileUpload !== false) {
+        $stmt->bindParam(1, $this->nombre_foto, PDO::PARAM_STR);
 
-            $query = "INSERT INTO " . $this->table_nombre . " nombre_foto = ?";
-
-            $stmt = $this->connection->prepare($query);
-
-            if ($stmt->execute()) {
-                return true;
-            }
-
-            return false;
-        } else {
+        if ($stmt->execute()) {
+            return true;
         }
+
+        return false;
     }
 
     public function read()
@@ -52,12 +52,56 @@ class Carrousel
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $this->id = $row['fotoID'];
+
+        if (!$row)
+            return false;
+
         $this->nombre_foto = $row['nombre_foto'];
+
+        return $this->nombre_foto;
+    }
+
+    public function read_by_name()
+    {
+        $query = "SELECT * FROM " . $this->table_nombre . " WHERE nombre_foto = ? LIMIT 1";
+        $stmt = $this->connection->prepare($query);
+
+        $stmt->bindParam(1, $this->id, PDO::PARAM_STR);
+
+        $stmt->execute();
+
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
+        if (!$row)
+            return false;
+
+        $this->nombre_foto = $row['nombre_foto'];
+        $this->id = $row['id'];
+
+        return $this->id;
     }
 
     public function delete()
     {
 
+        $img = IMG_DCTY . $this->read_row() . EXTN;
+
+        if (unlink($img)) {
+            $query = "DELETE FROM " . $this->table_nombre . " WHERE fotoID = ?";
+            $stmt = $this->connection->prepare($query);
+
+            $this->id = htmlspecialchars(strip_tags($this->id));
+
+            $stmt->bindParam(1, $this->id, PDO::PARAM_INT);
+            echo json_encode($stmt);
+
+            if ($stmt->execute()) {
+                return true;
+            }
+
+            return false;
+        } else
+            http_response_code(404);
     }
 }

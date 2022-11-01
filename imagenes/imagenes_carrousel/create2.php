@@ -26,9 +26,25 @@ $db = $database->getConnection();
 
 $carrouselImg = new Carrousel($db);
 
-$data = json_decode(file_get_contents("php://input"));
+var_dump($_POST);
+if (isset($_POST['fileToUpload']['name'])) {
+    $img_name  =  $_FILES['fileToUpload']['name'];
+    $tmp_img_name = $_FILES['fileToUpload']['tmp_name'];
 
-if (empty($data->nombre_foto)) {
+    if (move_uploaded_file($tmp_img_name, $img_name))
+        echo json_encode(array('Success' => "Se ha mandado la imagen alv"));
+    else
+        echo json_encode(array('Error' => "Vales v"));
+} else {
+    echo json_encode($_POST);
+    die();
+}
+//$data = json_decode(file_get_contents("php://input"));
+
+
+//echo json_encode($_FILES['imgObj']['name']);
+
+/* if (empty($data->nombre_foto)) {
     http_response_code(400);
 
     echo json_encode(array("message" => "Unable to create carrouselImg. Data incomplete."));
@@ -55,4 +71,4 @@ if (empty($data->nombre_foto)) {
             echo json_encode(array("message" => "Unable to create carrouselImg."));
         }
     }
-}
+} */
