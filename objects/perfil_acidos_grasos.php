@@ -73,14 +73,15 @@ class PerfilAG
 
     function readItemByProps($acidoGrasoID, $cantidad)
     {
-        $query = "SELECT * FROM " . $this->table_nombre . " WHERE cantidad=:cantidad AND acidoGrasoID=:acidoGrasoID";
+        $query = "SELECT * FROM " . $this->table_nombre . " WHERE cantidad BETWEEN :cantidadLow AND :cantidadHigh AND acidoGrasoID=:acidoGrasoID";
         $stmt = $this->connection->prepare($query);
 
         $acidoGrasoID = htmlspecialchars(strip_tags($acidoGrasoID));
         $cantidad = htmlspecialchars(strip_tags($cantidad));
 
         $stmt->bindParam(':acidoGrasoID', $acidoGrasoID);
-        $stmt->bindParam(':cantidad', $cantidad);
+        $stmt->bindParam(':cantidadLow', $cantidad * 0.9);
+        $stmt->bindParam(':cantidadHigh', $cantidad * 1.1);
 
         $stmt->execute();
 

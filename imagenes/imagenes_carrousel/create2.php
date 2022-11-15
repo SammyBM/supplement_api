@@ -26,17 +26,22 @@ $db = $database->getConnection();
 
 $carrouselImg = new Carrousel($db);
 
-var_dump($_POST);
-if (isset($_POST['fileToUpload']['name'])) {
-    $img_name  =  $_FILES['fileToUpload']['name'];
-    $tmp_img_name = $_FILES['fileToUpload']['tmp_name'];
+if ($_FILES) {
+    $img_name  =  $_FILES['file']['name'];
+    $tmp_img_name = $_FILES['file']['tmp_name'];
 
-    if (move_uploaded_file($tmp_img_name, $img_name))
-        echo json_encode(array('Success' => "Se ha mandado la imagen alv"));
-    else
-        echo json_encode(array('Error' => "Vales v"));
+    if (move_uploaded_file($tmp_img_name, $img_name)) {
+        $name = explode(".", $img_name);
+        rename($img_name, hash("md5", $name[0]) . '.' . $name[1]);
+        $carrouselImg->nombre_foto = hash("md5", $name[0]) . $name[1];
+        if ($carrouselImg->create())
+            echo json_encode(array('Success' => "Se ha mandado la imagen alv"));
+        else
+            echo json_encode(array('Error' => "No ha sido posible crear el registro en la BD."));
+    } else
+        echo json_encode(array('Error' => "No se ha podido enviar la imagen al servidor"));
 } else {
-    echo json_encode($_POST);
+    echo json_encode(array("Error" => "No se ha detectado ninguna imagen"));
     die();
 }
 //$data = json_decode(file_get_contents("php://input"));

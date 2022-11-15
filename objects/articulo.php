@@ -50,22 +50,22 @@ class Articulo
         $this->lipidos = htmlspecialchars(strip_tags($this->lipidos));
         $this->carbohidratos = htmlspecialchars(strip_tags($this->carbohidratos));
         $query = "INSERT INTO " .
-         $this->table_nombre .
-          " VALUES(NULL,'".$this->titulo."',
-            '".$etiquetas."',
-            '".$this->imagen->imageName."',
-            '".$this->categoriaID."',
-            '".$this->tamanoPorcion."',
-            '".$this->calorias."',
-            '".$this->proteina."',
-            '".$this->lipidos."',
-            '".$this->carbohidratos."')";
-        $result=mysqli_query($this->connection,$query);
-        $id=mysqli_insert_id($this->connection);
-        if(uploadProductImage($this->imagen->imageName,$this->imagen->imageSrc, $id)){
-            if($result){
-                return json_encode("{status:true,data:".$id."}");
-            }else{
+            $this->table_nombre .
+            " VALUES(NULL,'" . $this->titulo . "',
+            '" . $etiquetas . "',
+            '" . $this->imagen->imageName . "',
+            '" . $this->categoriaID . "',
+            '" . $this->tamanoPorcion . "',
+            '" . $this->calorias . "',
+            '" . $this->proteina . "',
+            '" . $this->lipidos . "',
+            '" . $this->carbohidratos . "')";
+        $result = mysqli_query($this->connection, $query);
+        $id = mysqli_insert_id($this->connection);
+        if (uploadProductImage($this->imagen->imageName, $this->imagen->imageSrc, $id)) {
+            if ($result) {
+                return json_encode("{status:true,data:" . $id . "}");
+            } else {
                 return json_encode("{status:false}");
             }
         } else {
@@ -99,7 +99,7 @@ class Articulo
 
     function readByProps()
     {
-        $query = "SELECT * FROM " . $this->table_nombre . " WHERE categoriaID=:categoriaID,tamanoPorcion=:tamanoPorcion,calorias=:calorias, proteina=:proteina, lipidos=:lipidos, carbohidratos=:carbohidratos WHERE usuarioID = :id";
+        $query = "SELECT * FROM " . $this->table_nombre . " WHERE categoriaID=:categoriaID,tamanoPorcion BETWEEN :tamanoPorcionLow AND :tamanoPorcionHigh, calorias BETWEEN :caloriasLow AND :caloriasHigh, proteina BETWEEN :proteinaLow AND :proteinaHigh, lipidos BETWEEN :lipidosLow AND :lipidosHigh, carbohidratos BETWEEN :carbohidratosLow AND :carbohidratosHigh";
 
         $stmt = $this->connection->prepare($query);
 
@@ -110,15 +110,18 @@ class Articulo
         $this->lipidos = htmlspecialchars(strip_tags($this->lipidos));
         $this->carbohidratos = htmlspecialchars(strip_tags($this->carbohidratos));
 
-        $stmt->bindParam(':titulo', $this->titulo);
         $stmt->bindParam(':etiquetas', $this->etiquetas);
-        $stmt->bindParam(':imagen', $this->imagen);
         $stmt->bindParam(':categoriaID', $this->categoriaID);
-        $stmt->bindParam('tamanoPorcion', $this->tamanoPorcion);
-        $stmt->bindParam('calorias', $this->calorias);
-        $stmt->bindParam('proteina', $this->proteina);
-        $stmt->bindParam('lipidos', $this->lipidos);
-        $stmt->bindParam('carbohidratos', $this->carbohidratos);
+        $stmt->bindParam('tamanoPorcionLow', $this->tamanoPorcion * .9);
+        $stmt->bindParam('tamanoPorcionHigh', $this->tamanoPorcion * 1.1);
+        $stmt->bindParam('caloriasLow', $this->calorias * .9);
+        $stmt->bindParam('caloriasHigh', $this->calorias * 1.1);
+        $stmt->bindParam('proteinaLow', $this->proteina * .9);
+        $stmt->bindParam('proteinaHigh', $this->proteina * 1.1);
+        $stmt->bindParam('lipidosLow', $this->lipidos * .9);
+        $stmt->bindParam('lipidosHigh', $this->lipidos * 1.1);
+        $stmt->bindParam('carbohidratosLow', $this->carbohidratos * .9);
+        $stmt->bindParam('carbohidratosHigh', $this->carbohidratos * 1.1);
 
         $stmt->execute();
 

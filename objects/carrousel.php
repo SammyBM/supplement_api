@@ -1,7 +1,6 @@
 <?php
 
 const IMG_DCTY = "C:/xampp/htdocs/supplement_api/imagenes/imagenes_carrousel/";
-const EXTN = ".png";
 
 class Carrousel
 {
@@ -20,7 +19,7 @@ class Carrousel
     // Se debe validar la carga de la imagen por fuera de esta función.
     public function create()
     {
-        $query = "INSERT INTO " . $this->table_nombre . " nombre_foto = ?";
+        $query = "INSERT INTO " . $this->table_nombre . " (nombre_foto) VALUES (?);";
         $stmt = $this->connection->prepare($query);
 
         $stmt->bindParam(1, $this->nombre_foto, PDO::PARAM_STR);
@@ -85,7 +84,7 @@ class Carrousel
     public function delete()
     {
 
-        $img = IMG_DCTY . $this->read_row() . EXTN;
+        $img = IMG_DCTY . $this->read_row();
 
         if (unlink($img)) {
             $query = "DELETE FROM " . $this->table_nombre . " WHERE fotoID = ?";
@@ -94,9 +93,9 @@ class Carrousel
             $this->id = htmlspecialchars(strip_tags($this->id));
 
             $stmt->bindParam(1, $this->id, PDO::PARAM_INT);
-            echo json_encode($stmt);
 
             if ($stmt->execute()) {
+                http_response_code(204);
                 return true;
             }
 

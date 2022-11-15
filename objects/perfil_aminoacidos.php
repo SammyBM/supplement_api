@@ -72,14 +72,15 @@ class PerfilAminos
 
     function readItemByProps($aminoID, $cantidad)
     {
-        $query = "SELECT * FROM " . $this->table_nombre . " WHERE cantidad=:cantidad AND aminoID=:aminoID";
+        $query = "SELECT * FROM " . $this->table_nombre . " WHERE cantidad BETWEEN :cantidadLow AND :cantidadHigh AND aminoID=:aminoID";
         $stmt = $this->connection->prepare($query);
 
         $aminoID = htmlspecialchars(strip_tags($aminoID));
         $cantidad = htmlspecialchars(strip_tags($cantidad));
 
         $stmt->bindParam(':aminoID', $aminoID);
-        $stmt->bindParam(':cantidad', $cantidad);
+        $stmt->bindParam(':cantidadLow', $cantidad * 0.9);
+        $stmt->bindParam(':cantidadHigh', $cantidad * 1.1);
 
         $stmt->execute();
 

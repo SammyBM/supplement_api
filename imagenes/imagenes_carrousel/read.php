@@ -41,7 +41,7 @@ if ($num > 0) {
     $length = sizeof($fotos_array["records"]);
     for ($i = 0; $i < $length; $i++) {
         $imageData = base64_encode(file_get_contents($LOCAL . "/imagenes/imagenes_carrousel/" .
-            $fotos_array["records"][$i]["nombre_foto"] . ".png"));
+            $fotos_array["records"][$i]["nombre_foto"]));
         $fotos_array["records"][$i]["bitmap"] = $imageData;
     }
 
