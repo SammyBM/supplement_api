@@ -1,7 +1,7 @@
 <?php
 
 include '../config/ROUTE.php';
-header('Access-Control-Allow-Origin:'.$ROUTE.'');
+header('Access-Control-Allow-Origin:' . $ROUTE . '');
 header("Access-Control-Allow-Credentials: true");
 header("Accept: application/json, text/plain");
 //headers que permiten requests al mismo servidor, potencialmente no necesarios cuando este distribuido 
@@ -34,7 +34,7 @@ if ($num > 0) {
         extract($row);
 
         $reporte_item  = array(
-            "reporteID" => $id,
+            "reporteID" => $reporteID,
             "resumen" => $resumen,
             "texto" => $texto,
             "fechaCreacion" => $fechaCreacion,
